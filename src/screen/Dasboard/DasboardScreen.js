@@ -1,6 +1,46 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar from "../../components/Sidebar";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 function DasboardScreen() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const dataAuth = useSelector((state) => state.userReducer.dasboardAuth);
+  const dataUser = useSelector((state) => state.userReducer.user);
+  useEffect(() => {
+    cekToken();
+    GetDataAuth();
+  }, []);
+
+  const cekToken = () => {
+    if (dataUser) {
+      return;
+    } else {
+      navigate("/");
+    }
+  };
+
+  const GetDataAuth = async () => {
+    const endpoint = `http://localhost:3333/user/auth`;
+    fetch(endpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("dataLOGIN", data);
+        dispatch({
+          type: "SET_AUTH_DASBOARD",
+          payload: data.data,
+        });
+      })
+      .catch((error) => console.log(error));
+  };
+
   const people = [
     {
       id_user: 6,
@@ -29,6 +69,7 @@ function DasboardScreen() {
     // Add more people as needed
   ];
 
+  console.log("dataAuth", dataAuth);
   const PeopleTable = ({ people }) => {
     return (
       <div className="overflow-x-auto">
@@ -45,18 +86,18 @@ function DasboardScreen() {
             </tr>
           </thead>
           <tbody>
-            {people.map((person, index) => (
+            {dataAuth?.map((person, index) => (
               <tr
                 key={person.id}
                 className="bg-gray-100 border-b border-gray-200"
               >
                 <td className="px-4 py-2">{index + 1}</td>
                 <td className="px-4 py-2">{person.id_user}</td>
-                <td className="px-4 py-2">{person.UID}</td>
+                <td className="px-4 py-2">{person.uid}</td>
                 {/* <td className="px-4 py-2">{person.token}</td> */}
-                <td className="px-4 py-2">{person.Role}</td>
-                <td className="px-4 py-2">{person.lates_login}</td>
-                <td className="px-4 py-2">{person.soft_delete}</td>
+                <td className="px-4 py-2">{person.role}</td>
+                <td className="px-4 py-2">{person.latestLogin}</td>
+                <td className="px-4 py-2">{person.softdelete}</td>
               </tr>
             ))}
           </tbody>
@@ -67,11 +108,12 @@ function DasboardScreen() {
 
   return (
     <div>
-      <div className="flex row">
-        <Sidebar />
-        <div className="w-full">
-          <PeopleTable people={people} />
-        </div>
+      <div className="flex">
+        <Sidebar>
+          <div className="w-full">
+            <PeopleTable people={people} />
+          </div>
+        </Sidebar>
       </div>
     </div>
   );

@@ -1,15 +1,19 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { loginFields } from "../constants/formFields";
 import FormAction from "./FormAction";
 import FormExtra from "./FormExtra";
 import Input from "./Input";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const fields = loginFields;
 let fieldsState = {};
 fields.forEach((field) => (fieldsState[field.id] = ""));
 
-export default function Login() {
+export default function Login(props) {
   const [loginState, setLoginState] = useState(fieldsState);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });
@@ -48,7 +52,13 @@ export default function Login() {
     })
       .then((response) => response.json())
       .then((data) => {
-        //API Success from LoginRadius Login API
+        console.log("dataLOGIN", data);
+        dispatch({
+          type: "SET_USER",
+          payload: data.data,
+        });
+        console.log("GONAvigate");
+        navigate("/dasboard");
       })
       .catch((error) => console.log(error));
   };
