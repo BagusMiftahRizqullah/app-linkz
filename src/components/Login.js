@@ -22,23 +22,35 @@ export default function Login() {
 
   //Handle Login API Integration here
   const authenticateUser = () => {
-    // let loginFields={
-    //         email:loginState['email-address'],
-    //         password:loginState['password']
-    // };
-    // const endpoint=`https://api.loginradius.com/identity/v2/auth/login?apikey=${apiKey}&apisecret=${apiSecret}`;
-    //  fetch(endpoint,
-    //      {
-    //      method:'POST',
-    //      headers: {
-    //      'Content-Type': 'application/json'
-    //      },
-    //      body:JSON.stringify(loginFields)
-    //      }).then(response=>response.json())
-    //      .then(data=>{
-    //         //API Success from LoginRadius Login API
-    //      })
-    //      .catch(error=>console.log(error))
+    const userAgent = window.navigator.userAgent;
+    const platform = window.navigator.platform;
+    const randomString =
+      Math.random().toString(20).substring(2, 14) +
+      Math.random().toString(20).substring(2, 14);
+
+    const deviceID = `UID${randomString}`;
+    console.log("deviceID", deviceID);
+
+    let loginFields = {
+      email: loginState["email-address"],
+      password: loginState["password"],
+      uid: deviceID,
+    };
+
+    console.log("LOGIN DATA", loginFields);
+    const endpoint = `http://localhost:3333/user/signin`;
+    fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(loginFields),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        //API Success from LoginRadius Login API
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
