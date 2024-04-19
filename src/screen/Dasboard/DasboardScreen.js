@@ -9,17 +9,17 @@ function DasboardScreen() {
   const dataAuth = useSelector((state) => state.userReducer.dasboardAuth);
   const dataUser = useSelector((state) => state.userReducer.user);
   useEffect(() => {
-    cekToken();
+    // cekToken();
     GetDataAuth();
   }, []);
 
-  const cekToken = () => {
-    if (dataUser) {
-      return;
-    } else {
-      navigate("/");
-    }
-  };
+  // const cekToken = () => {
+  //   if (dataUser) {
+  //     return;
+  //   } else {
+  //     navigate("/");
+  //   }
+  // };
 
   const GetDataAuth = async () => {
     const endpoint = `http://localhost:3333/user/auth`;

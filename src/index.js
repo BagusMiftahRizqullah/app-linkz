@@ -6,6 +6,10 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 const root = ReactDOM.createRoot(document.getElementById("root"));
+export const metadata = {
+  title: "Linkz App",
+  description: "Linkz App Dasboard",
+};
 root.render(
   <React.StrictMode>
     <Provider store={store}>
